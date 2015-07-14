@@ -1,0 +1,25 @@
+﻿Build started 30/06/2015 3:56:50 PM.
+     1>Project "C:\Users\nicholas.byrne\Desktop\workspace\trunk\MathLibrary\MathLibrary\MathLibrary.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Matrix3x3.cpp Matrix4x4.cpp Source.cpp Vector3.cpp Vector4.cpp
+         Vector4.cpp
+         Vector3.cpp
+         Matrix4x4.cpp
+         Matrix3x3.cpp
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         Source.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\nicholas.byrne\Desktop\workspace\trunk\MathLibrary\Debug\MathLibrary.lib" /NOLOGO Debug\Matrix2x2.obj
+         Debug\Matrix3x3.obj
+         Debug\Matrix4x4.obj
+         Debug\Source.obj
+         Debug\Vector2.obj
+         Debug\Vector3.obj
+         Debug\Vector4.obj
+         MathLibrary.vcxproj -> C:\Users\nicholas.byrne\Desktop\workspace\trunk\MathLibrary\Debug\MathLibrary.lib
+     1>Done Building Project "C:\Users\nicholas.byrne\Desktop\workspace\trunk\MathLibrary\MathLibrary\MathLibrary.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.39
