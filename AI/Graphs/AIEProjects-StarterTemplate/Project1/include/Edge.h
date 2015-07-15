@@ -2,7 +2,6 @@
 #define EDGE_H
 #include "Vector2.h"
 
-class Vector2;
 class Node;
 class SpriteBatch;
 

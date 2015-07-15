@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "SpriteBatch.h"
+#include "Font.h"
 
 Node::Node()
 {
@@ -76,14 +77,34 @@ void Node::RemoveEdge(Node * toRemove)
 	}
 }
 
-void Node::DrawEdge(SpriteBatch & a_spriteBatch, Edge * edge, float thickness)
+
+void Node::DrawCircle(SpriteBatch* a_spriteBatch, float a_radius, Font* a_font)
 {
-	if (edge != nullptr)
-		a_spriteBatch.DrawLine(edge->startNode->position.x, edge->startNode->position.y, edge->endNode->position.x, edge->endNode->position.y, 2.0f);
+	
+	Vector2 oldPos = Vector2(position.x + (cos(0.0f) * a_radius), position.y + (sin(0.0f) * a_radius));
+
+	for (float i = 0; i < 2 * 3.1457f; i += 3.1457f / 10.0f)
+	{
+		Vector2 newPos;
+
+		newPos.x = position.x + (cos(i) * a_radius);
+		newPos.y = position.y + (sin(i) * a_radius);
+
+		a_spriteBatch->DrawLine(oldPos.x, oldPos.y, newPos.x, newPos.y, 2.0f);
+
+		oldPos = newPos;
+	}
 }
 
 
-void Node::DrawEdgeAll(SpriteBatch & a_spriteBatch, float thickness)
+void Node::DrawEdge(SpriteBatch* a_spriteBatch, Edge * edge, float thickness)
+{
+	if (edge != nullptr)
+		a_spriteBatch->DrawLine(edge->startNode->position.x, edge->startNode->position.y, edge->endNode->position.x, edge->endNode->position.y, 2.0f);
+}
+
+
+void Node::DrawEdgeAll(SpriteBatch* a_spriteBatch, float thickness)
 {
 	for (iter = nodeEdges.begin(); iter != nodeEdges.end(); iter++)
 	{
@@ -93,28 +114,4 @@ void Node::DrawEdgeAll(SpriteBatch & a_spriteBatch, float thickness)
 
 
 
-//Vector2::Vector2()
-//{
-//	x = 0;
-//	y = 0;
-//}
-//
-//
-//Vector2::Vector2(float a_x, float a_y)
-//{
-//	x = a_x;
-//	y = a_y;
-//}
-//
-//
-//Vector2::~Vector2()
-//{
-//
-//}
-//
-//
-//Vector2::Vector2(Vector2 &other)
-//{
-//	x = other.x;
-//	y = other.y;
-//}
+

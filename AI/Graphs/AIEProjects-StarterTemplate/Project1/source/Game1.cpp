@@ -9,6 +9,7 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 {
 	m_spritebatch = SpriteBatch::Factory::Create(this, SpriteBatch::GL3);
 	myGraph = new Graph();
+	m_arielFont = new Font("./Fonts/arial_20px.fnt");
 	//myGraph->AddNode(35, 420);
 	//myGraph->AddNode(500, 560);
 	//myGraph->AddNode(250, 40);
@@ -26,6 +27,8 @@ Game1::~Game1()
 }
 
 
+//if (GetInput()->IsKeyDown(GLFW_KEY_D)
+//if (GetInput()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_1)) //1=L, 2=R
 void Game1::Update(float deltaTime)
 {
 	int *ypos = new int;
@@ -34,15 +37,14 @@ void Game1::Update(float deltaTime)
 	float mousePosx = (float)*xpos;
 	float mousePosy = (float)*ypos;
 
-	//if (GetInput()->IsKeyDown(GLFW_KEY_D)
-	//if (GetInput()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_1)) //1=L, 2=R
 	if (GetInput()->WasMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
 	{
 		//if node is already selected, and node is clicked
 		if ((myGraph->selectedNode != nullptr) && (myGraph->GraphNodeClicked(mousePosx, mousePosy) != nullptr))
 		{
-			//create edge between, w/ cost
-			myGraph->selectedNode->InsertEdge(myGraph->GraphNodeClicked(mousePosx, mousePosy), 0);
+			//create edge between, w/ cost //  Cost = Vector2::Distance(myGraph->selectedNode->position, myGraph->GraphNodeClicked(mousePosx, mousePosy))
+			myGraph->selectedNode->InsertEdge(myGraph->GraphNodeClicked(mousePosx, mousePosy), Vector2::Distance(myGraph->selectedNode->position, Vector2(myGraph->GraphNodeClicked(mousePosx, mousePosy)->position)));
+			//myGraph->selectedNode->InsertEdge(myGraph->GraphNodeClicked(mousePosx, mousePosy), 0);
 			myGraph->selectedNode = nullptr;
 		}
 		//if node is already selected, and an empty space is clicked
@@ -68,9 +70,11 @@ void Game1::Update(float deltaTime)
 		if (removeNode != nullptr)
 		{
 			myGraph->RemoveNode(removeNode);
+			myGraph->selectedNode = nullptr;
 		}
 	}
 
+	//Print Node position, and connected nodes position
 	if (GetInput()->WasKeyPressed(GLFW_KEY_P))
 	{
 		system("cls");
@@ -85,6 +89,8 @@ void Game1::Update(float deltaTime)
 		}
 	}
 
+
+
 }
 
 void Game1::Draw()
@@ -96,8 +102,8 @@ void Game1::Draw()
 
 	// TODO: draw stuff.
 
-	myGraph->DrawCircleAll(*m_spritebatch, 10.0f);
-	myGraph->DrawEdgeAll(*m_spritebatch, 10.0f);
+	myGraph->DrawCircleAll(m_spritebatch, 10.0f);
+	myGraph->DrawEdgeAll(m_spritebatch, 10.0f);
 
 
 	m_spritebatch->End();

@@ -2,11 +2,17 @@
 #include <math.h>
 #include <iostream>
 #include <limits>
+#include "SpriteBatch.h"
 
 Graph::Graph()
 {
 	a_nodeVector.reserve(10);
 	iter = a_nodeVector.begin();
+
+	selectedNode = nullptr;
+	m_startNode = nullptr;
+	m_endNode = nullptr;
+	
 }
 
 Graph::~Graph()
@@ -352,10 +358,7 @@ void Graph::PrintDFS(Node* startNode)
 }
 
 
-
-
-
-void Graph::DrawCircle(SpriteBatch& a_spriteBatch, Vector2 pos, float radius)
+void Graph::DrawCircle(SpriteBatch* a_spriteBatch, Vector2 pos, float radius)
 {
 	Vector2 oldPos = Vector2(pos.x + (cos(0.0f) * radius), pos.y + (sin(0.0f) * radius));
 
@@ -366,24 +369,50 @@ void Graph::DrawCircle(SpriteBatch& a_spriteBatch, Vector2 pos, float radius)
 		newPos.x = pos.x + (cos(i) * radius);
 		newPos.y = pos.y + (sin(i) * radius);
 
-		a_spriteBatch.DrawLine(oldPos.x, oldPos.y, newPos.x, newPos.y, 2.0f);
+		a_spriteBatch->DrawLine(oldPos.x, oldPos.y, newPos.x, newPos.y, 2.0f);
 
 		oldPos = newPos;
 	}
 }
 
 
-void Graph::DrawCircleAll(SpriteBatch& a_spriteBatch, float radius)
+void Graph::DrawCircle(SpriteBatch* a_spriteBatch, Vector2 pos, float radius, Font* a_font)
 {
-	for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
+	Vector2 oldPos = Vector2(pos.x + (cos(0.0f) * radius), pos.y + (sin(0.0f) * radius));
+
+	for (float i = 0; i < 2 * 3.1457f; i += 3.1457f / 10.0f)
 	{
-		if (*iter != nullptr)
-			DrawCircle(a_spriteBatch, (*iter)->position, radius);
+		Vector2 newPos;
+
+		newPos.x = pos.x + (cos(i) * radius);
+		newPos.y = pos.y + (sin(i) * radius);
+
+		a_spriteBatch->DrawLine(oldPos.x, oldPos.y, newPos.x, newPos.y, 2.0f);
+
+		oldPos = newPos;
 	}
 }
 
 
-void Graph::DrawEdgeAll(SpriteBatch & a_spriteBatch, float thickness)
+void Graph::DrawCircleAll(SpriteBatch* a_spriteBatch, float radius)
+{
+	for (int i = 0; i < a_nodeVector.size(); i++)
+	{
+		DrawCircle(a_spriteBatch, a_nodeVector[i]->position, radius);
+	}
+}
+
+
+void Graph::DrawCircleAll(SpriteBatch* a_spriteBatch, float radius, Font* a_font)
+{
+	for (int i = 0; i < a_nodeVector.size(); i++)
+	{
+		DrawCircle(a_spriteBatch, a_nodeVector[i]->position, radius, a_font);
+	}
+}
+
+
+void Graph::DrawEdgeAll(SpriteBatch* a_spriteBatch, float thickness)
 {
 	for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
 	{

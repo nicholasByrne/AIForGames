@@ -3,6 +3,8 @@
 #include <vector>
 #include "Edge.h"
 
+class Font;
+
 class Node
 {
 public:
@@ -23,8 +25,9 @@ public:
 	void InsertEdge(Node * end, int a_cost);
 	void RemoveEdge(Node * toRemove);
 
-	void DrawEdge(SpriteBatch & a_spriteBatch, Edge * edge, float thickness);
-	void DrawEdgeAll(SpriteBatch & a_spriteBatch, float thickness);
+	void DrawCircle(SpriteBatch* a_spriteBatch, float a_radius, Font* a_font);
+	void DrawEdge(SpriteBatch* a_spriteBatch, Edge * edge, float thickness);
+	void DrawEdgeAll(SpriteBatch* a_spriteBatch, float thickness);
 
 
 private:

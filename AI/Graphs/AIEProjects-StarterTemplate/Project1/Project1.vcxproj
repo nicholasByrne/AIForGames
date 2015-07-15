@@ -86,7 +86,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Edge.cpp" />
     <ClCompile Include="source\Game1.cpp" />
     <ClCompile Include="source\Graph.cpp" />
@@ -94,11 +96,13 @@
     <ClCompile Include="source\Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Edge.h" />
     <ClInclude Include="include\Game1.h" />
     <ClInclude Include="include\Graph.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\Vector2.h" />
+    <ClInclude Include="include\Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,6 +28,7 @@ public:
 
 protected:
 
+	Font* m_arielFont;
 	SpriteBatch *m_spritebatch;
 	Graph * myGraph;
 private:

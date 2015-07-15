@@ -1,11 +1,13 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "Node.h"
-#include "SpriteBatch.h"
+//#include "SpriteBatch.h"
 #include <vector>
 #include <list>
 #include <queue>
 #include <stack>
+
+class SpriteBatch;
 
 class Graph
 {
@@ -16,6 +18,9 @@ public:
 	std::vector<Node*> a_nodeVector;
 	std::vector<Node*>::iterator iter;
 	Node* selectedNode;
+
+	Node* m_startNode;
+	Node* m_endNode;
 
 	void RemoveNode(Node * toRemove);
 	void AddNode(float x, float y);
@@ -34,9 +39,11 @@ public:
 	void PrintDFS(Node* startNode);
 
 	//Printing
-	void DrawCircle(SpriteBatch& a_spriteBatch, Vector2 pos, float radius);
-	void DrawCircleAll(SpriteBatch& a_spriteBatch, float radius);
-	void DrawEdgeAll(SpriteBatch & a_spriteBatch, float thickness);
+	void DrawCircle(SpriteBatch* a_spriteBatch, Vector2 pos, float radius);
+	void DrawCircle(SpriteBatch* a_spriteBatch, Vector2 pos, float radius, Font* a_font); //With number under it
+	void DrawCircleAll(SpriteBatch* a_spriteBatch, float radius);
+	void DrawCircleAll(SpriteBatch* a_spriteBatch, float radius, Font* a_font); //With numbers under them
+	void DrawEdgeAll(SpriteBatch* a_spriteBatch, float thickness);
 
 	//returns nullptr if not clicked within 50 pixel of node
 	Node* GraphNodeClicked(float a_x, float a_y);
