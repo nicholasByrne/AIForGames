@@ -175,3 +175,16 @@ Vector2 operator*(float lhs, Vector2 &rhs)
 {
 	return rhs * lhs;
 }
+
+
+Vector2 Vector2::Normalise(Vector2& vectorA)
+{
+	Vector2 temp;
+	float magnitude = vectorA.Magnitude();
+	if (magnitude != 0)
+	{
+		temp.x = vectorA.x / magnitude;
+		temp.y = vectorA.y / magnitude;
+	}
+	return temp;
+}
