@@ -188,3 +188,15 @@ Vector2 Vector2::Normalise(Vector2& vectorA)
 	}
 	return temp;
 }
+
+
+float Vector2::Magnitude(Vector2& vectorA)
+{
+	return vectorA.Magnitude();
+}
+
+
+float Vector2::MagnitudeSqrd(Vector2& vectorA)
+{
+	return vectorA.MagnitudeSqrd();
+}

@@ -24,6 +24,7 @@ public:
 
 	void RemoveNode(Node * toRemove);
 	void AddNode(float x, float y);
+	void AddNode(Vector2& vectorA);
 
 	//float CompareGScore(Node* first, Node* second);
 	//float CompareFScore(Node* first, Node* second);
@@ -47,7 +48,7 @@ public:
 
 	//returns nullptr if not clicked within 50 pixel of node
 	Node* GraphNodeClicked(float a_x, float a_y);
-
+	Node* GraphNodeClicked(Vector2& vectorA);
 
 
 	struct CompareGScorePlz

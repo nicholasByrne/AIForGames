@@ -1,9 +1,9 @@
 #pragma once
-#include "GameObject.h"
+#include "Agent.h"
 
 class Input;
 
-class Player :	public GameObject
+class Player :	public Agent
 {
 public:
 	Player();

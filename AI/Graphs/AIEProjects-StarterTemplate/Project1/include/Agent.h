@@ -9,10 +9,11 @@ class Agent : public GameObject
 {
 public:
 	Agent();
+	Agent(Vector2& startingPos, Texture* texture, SpriteBatch* spriteBatch);
 	virtual ~Agent();
 
 	virtual void Update(float deltaTime);
-	virtual void Draw();
+	//virtual void Draw();
 
 	void AddBehaviour(IBehaviour* a_behaviour);
 	//Agent* m_targetAgent;

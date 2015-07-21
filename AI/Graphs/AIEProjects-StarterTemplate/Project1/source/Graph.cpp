@@ -17,40 +17,71 @@ Graph::Graph()
 
 Graph::~Graph()
 {
-	//delete[] a_nodeArray;
+	for (int i = 0; i < a_nodeVector.size(); ++i)
+	{
+		delete a_nodeVector[i];
+	}
+	a_nodeVector.clear();
+
+	delete selectedNode;
+	delete m_startNode;
+	delete m_endNode;
 }
 
 
 void Graph::RemoveNode(Node * toRemove)
 {
+	//remove edges from other nodes to node
 	for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
 	{
-		if ((*iter) == toRemove)
-		{
-			//if 2way edge, remove edge to this, first
-			toRemove->RemoveEdge((*iter));
-			//then remove edge from this
-			(*iter)->RemoveEdge(toRemove);
-		}
-		//(*iter)->RemoveEdge(toRemove);	
+		(*iter)->RemoveEdge(toRemove);		
 	}
 
-	//remove node
-	for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
+	for (iter = a_nodeVector.begin(); iter != a_nodeVector.end();)
 	{
 		if ((*iter) == toRemove)
 		{
-			delete (*iter);
-			a_nodeVector.erase(iter);
+			//delete (*iter);
+			iter = a_nodeVector.erase(iter);
 			break;
 		}
+		else
+			iter++;
 	}
+
+	//for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
+	//{
+	//	if ((*iter) == toRemove)
+	//	{
+	//		//if 2way edge, remove edge to this, first
+	//		toRemove->RemoveEdge((*iter));
+	//		//then remove edge from this
+	//		(*iter)->RemoveEdge(toRemove);
+	//	}
+	//	//(*iter)->RemoveEdge(toRemove);	
+	//}
+	//
+	////remove node
+	//for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
+	//{
+	//	if ((*iter) == toRemove)
+	//	{
+	//		delete (*iter);
+	//		a_nodeVector.erase(iter);
+	//		break;
+	//	}
+	//}
 }
 
 
 void Graph::AddNode(float x, float y)
 {
 	a_nodeVector.push_back(new Node(x, y));
+}
+
+void Graph::AddNode(Vector2& vectorA)
+{
+	AddNode(vectorA.x, vectorA.y);
 }
 
 
@@ -439,3 +470,7 @@ Node* Graph::GraphNodeClicked(float a_x, float a_y)
 }
 
 
+Node* Graph::GraphNodeClicked(Vector2& vectorA)
+{
+	return GraphNodeClicked(vectorA.x, vectorA.y);
+}

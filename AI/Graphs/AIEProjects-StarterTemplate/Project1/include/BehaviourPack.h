@@ -3,11 +3,13 @@
 #include "Agent.h"
 #include "Vector2.h"
 #include <list>
-
+#include <algorithm>
+#include <vector>
 
 class Seek : public IBehaviour
 {
-	Seek(Vector2& targetPos) : m_targetPos(&targetPos){};
+public:
+	Seek(Vector2* targetPos) : m_targetPos(targetPos){};
 	Seek(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
 	~Seek();
 
@@ -16,14 +18,15 @@ class Seek : public IBehaviour
 	{
 		//Apply seek force to pAgent
 		Vector2 m_toTarget = Vector2::Normalise(*m_targetPos - pAgent->m_position) * pAgent->m_maxVelocity;
-		pAgent->AddForce(m_toTarget - pAgent->m_velocity);
+		pAgent->AddForce( (m_toTarget) * 1000.0f) ;
 	}
 };
 
 
 class Flee : public IBehaviour
 {
-	Flee(Vector2& targetPos) : m_targetPos(&targetPos){};
+public:
+	Flee(Vector2* targetPos) : m_targetPos(targetPos){};
 	Flee(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
 	~Flee();
 
@@ -39,6 +42,7 @@ class Flee : public IBehaviour
 
 class Wander : public IBehaviour //TODO Wander
 {
+public:
 	Vector2 m_previousTarget;
 	virtual void Update(float f_radius, float f_distance, float f_jitter)
 	{
@@ -49,7 +53,8 @@ class Wander : public IBehaviour //TODO Wander
 
 class Pursue : public IBehaviour
 {
-	Pursue(Vector2& targetPos, Vector2& targetVelocity) : m_targetPos(&targetPos), m_targetVelocity(&targetVelocity){};
+public:
+	Pursue(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
 	Pursue(Agent targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
 	~Pursue();
 
@@ -66,7 +71,8 @@ class Pursue : public IBehaviour
 
 class Evade : public IBehaviour
 {
-	Evade(Vector2& targetPos, Vector2& targetVelocity) : m_targetPos(&targetPos), m_targetVelocity(&targetVelocity){};
+public:
+	Evade(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
 	Evade(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
 	~Evade();
 
@@ -83,11 +89,13 @@ class Evade : public IBehaviour
 
 class Arrive : public IBehaviour
 {
-	Arrive(Vector2& targetPos) : m_targetPos(&targetPos){};
-	Arrive(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
+public:
+	Arrive(Vector2* targetPos, float arriveRadius) : m_targetPos(targetPos), m_arriveRadius(arriveRadius){};
+	Arrive(Agent& targetAgent, float arriveRadius) : m_targetPos(&targetAgent.m_position), m_arriveRadius(arriveRadius){};
 	~Arrive();
 
 	Vector2* m_targetPos;
+	float m_arriveRadius;
 	virtual void Update(Agent* pAgent, float deltaTime)
 	{
 		//direction and distance to target
@@ -95,12 +103,67 @@ class Arrive : public IBehaviour
 		float distance = Vector2::Distance(pAgent->m_position, *m_targetPos);
 
 		//seek force to target
-		pAgent->AddForce((*m_targetPos - pAgent->m_position) * pAgent->m_maxVelocity);
+		Vector2 force((*m_targetPos - pAgent->m_position) * pAgent->m_maxVelocity);
 
 		//scalar representing distance from target (1 = radius edge, 0 = target, else > 1)
+		float scalar = fmin(distance / m_arriveRadius, 1);
 
+		//if within radius
+		if (scalar < 1)
+		{
+			//scale seek force down according to distance
+			force *= scalar;
+			//(-1, 1) scalar how close heading is with direction to target
+			float dot = Vector2::Dot(direction, Vector2::Normalise(pAgent->m_velocity));
+			
+			//force to slow down when approaching target
+			Vector2 resistance = -1 * (Vector2::Normalise(pAgent->m_velocity)) * Vector2::Magnitude(pAgent->m_velocity) * dot * 10;
+
+			//add resistance
+			force += resistance;
+		}
+
+		//add force to pAgent
+		pAgent->AddForce(force - pAgent->m_velocity);
 	}
 
 };
 
+
 //Avoid
+class Avoid : public IBehaviour
+{
+public:
+	Avoid(float maxSeeDist, std::vector<GameObject*>& objectVector) :m_maxSeeDistance(maxSeeDist), m_objectVector(&objectVector){};
+	~Avoid();
+
+	float m_maxSeeDistance;
+	std::vector<GameObject*>* m_objectVector;
+	Vector2 ahead;
+	Vector2 ahead2;
+	virtual void Update(Agent* pAgent, float deltaTime)
+	{
+		//how far ahead is "seen"
+		ahead = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * m_maxSeeDistance));
+		ahead2 = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * m_maxSeeDistance * 0.5f));
+
+		
+		//find closest(biggest) threat // collision detection Line + circle?
+		Vector2 biggestThreat;
+		float biggestThrestDist;
+		for (int i = 0; i < m_objectVector->size(); i++)
+		{
+			bool collision = GameObject::CheckCollision(ahead, m_objectVector[i]);
+			if (collision = true && )
+			{
+
+			}
+			
+		}
+		
+		//Vector2 avoidanceForce = ahead - obstacleCentre;
+		//avoidanceForce = avoidanceForce.NormaliseThis() * 10; // * Max_Avoid_Force
+	}
+};
+
+//Idle?

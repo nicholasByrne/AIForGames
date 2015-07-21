@@ -39,6 +39,8 @@ public:
 	static float Distance(Vector2& vectorA, Vector2& vectorB);
 	static float Angle(const Vector2& vectorA, const Vector2& vectorB);
 	static Vector2 Normalise(Vector2& vectorA);
+	static float Magnitude(Vector2& vectorA);
+	static float MagnitudeSqrd(Vector2& vectorA);
 
 private:
 

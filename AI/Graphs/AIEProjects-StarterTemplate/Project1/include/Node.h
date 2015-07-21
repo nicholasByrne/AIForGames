@@ -23,7 +23,7 @@ public:
 	std::vector<Edge*>::iterator iter;
 
 	void InsertEdge(Node * end, int a_cost);
-	void RemoveEdge(Node * toRemove);
+	void RemoveEdge(Node * edgeEndNode);
 
 	void DrawCircle(SpriteBatch* a_spriteBatch, float a_radius, Font* a_font);
 	void DrawEdge(SpriteBatch* a_spriteBatch, Edge * edge, float thickness);

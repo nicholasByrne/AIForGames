@@ -5,9 +5,14 @@ Description:
 -----------------------------------------------------------------------------*/
 #ifndef GAME1_H
 #define GAME1_H
-
+#
 #include "Application.h"
 #include "Graph.h"
+#include "GameObject.h"
+#include "Agent.h"
+#include <vector>
+#include "BehaviourPack.h"
+
 class SpriteBatch;
 
 class Game1 : public Application
@@ -27,10 +32,17 @@ public:
 
 
 protected:
-
+	int *xpos;
+	int *ypos;
+	std::vector<GameObject*> gameObjectVector;
 	Font* m_arielFont;
 	SpriteBatch *m_spritebatch;
 	Graph * myGraph;
+
+
+	Vector2 mousePos;
+
+	Texture* m_textureBox;
 private:
 };
 

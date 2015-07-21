@@ -28,7 +28,12 @@ Node::Node(float a_x, float a_y)
 
 Node::~Node()
 {
-	//delete[] nodeEdges;
+	for (int i = 0; i < nodeEdges.size(); ++i)
+	{
+		delete nodeEdges[i];
+	}
+	nodeEdges.clear();
+
 }
 
 //2 Way Edge
@@ -39,7 +44,7 @@ void Node::InsertEdge(Node * end, int a_cost)
 }
 
 //TODO? make 2way edge removal?
-void Node::RemoveEdge(Node * toRemove)
+void Node::RemoveEdge(Node * edgeEndNode)
 {
 	//for (int i = 0; i < nodeEdges.size(); i++)
 	//{
@@ -68,9 +73,9 @@ void Node::RemoveEdge(Node * toRemove)
 
 	for (iter = nodeEdges.begin(); iter != nodeEdges.end();)
 	{
-		if ((*iter)->endNode == toRemove)
+		if ((*iter)->endNode == edgeEndNode)
 		{
-			nodeEdges.erase(iter);
+			iter = nodeEdges.erase(iter);
 		}
 		else 
 			iter++;
