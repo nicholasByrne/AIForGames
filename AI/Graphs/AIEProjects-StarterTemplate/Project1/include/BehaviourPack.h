@@ -153,11 +153,11 @@ public:
 		float biggestThrestDist;
 		for (int i = 0; i < m_objectVector->size(); i++)
 		{
-			bool collision = GameObject::CheckCollision(ahead, m_objectVector[i]);
-			if (collision = true && )
-			{
-
-			}
+			//bool collision = GameObject::CheckCollision(ahead, m_objectVector[i]);
+			//if (collision = true && )
+			//{
+			//
+			//}
 			
 		}
 		
