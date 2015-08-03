@@ -134,36 +134,50 @@ public:
 class Avoid : public IBehaviour
 {
 public:
-	Avoid(float maxSeeDist, std::vector<GameObject*>& objectVector) :m_maxSeeDistance(maxSeeDist), m_objectVector(&objectVector){};
+	Avoid(float maxSeeDist, float maxAvoidForce, std::vector<GameObject*>& objectVector) : m_maxSeeDistance(maxSeeDist), m_maxAvoidForce(maxAvoidForce), m_objectVector(&objectVector){};
 	~Avoid();
 
 	float m_maxSeeDistance;
+	float m_maxAvoidForce;
 	std::vector<GameObject*>* m_objectVector;
 	Vector2 ahead;
 	Vector2 ahead2;
 	virtual void Update(Agent* pAgent, float deltaTime)
 	{
 		//how far ahead is "seen"
-		ahead = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * m_maxSeeDistance));
-		ahead2 = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * m_maxSeeDistance * 0.5f));
+		float dynamicLength = pAgent->m_velocity.Magnitude() / pAgent->m_maxVelocity;
+		ahead = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * dynamicLength));
+		ahead2 = Vector2(pAgent->m_position + (Vector2::Normalise(pAgent->m_velocity) * dynamicLength * 0.5f));
 
-		
 		//find closest(biggest) threat // collision detection Line + circle?
-		Vector2 biggestThreat;
+		GameObject* biggestThreat = nullptr;
 		float biggestThrestDist;
 		for (int i = 0; i < m_objectVector->size(); i++)
 		{
-			//bool collision = GameObject::CheckCollision(ahead, m_objectVector[i]);
-			//if (collision = true && )
-			//{
-			//
-			//}
-			
+			//TODO MAKE LINE COLLISION?
+			bool collision = GameObject::CheckCollision(ahead, (*m_objectVector)[i]);
+			//if collision = true, and not previous threat || is closer than previous threat
+			if ((collision == true) && ((Vector2::Distance(pAgent->m_position, (*m_objectVector)[i]->m_position) < biggestThrestDist) || biggestThreat == nullptr))
+			{
+				biggestThreat = (*m_objectVector)[i];
+			}
 		}
-		
-		//Vector2 avoidanceForce = ahead - obstacleCentre;
-		//avoidanceForce = avoidanceForce.NormaliseThis() * 10; // * Max_Avoid_Force
+
+		Vector2 avoidanceForce(0, 0);
+		if (biggestThreat != nullptr)
+		{
+			avoidanceForce = ahead - biggestThreat->m_position;
+			avoidanceForce.NormaliseThis();
+			avoidanceForce * m_maxAvoidForce;
+		}
+		//TODO v fix this? v
+		pAgent->AddForce(avoidanceForce);
 	}
 };
 
 //Idle?
+
+class AttackAction : IBehaviour
+{
+
+};

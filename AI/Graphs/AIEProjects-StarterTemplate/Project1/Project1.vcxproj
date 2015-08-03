@@ -86,7 +86,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Decision.cpp" />
+    <ClCompile Include="source\BooleanDecision.cpp" />
+    <ClCompile Include="source\Decision.cpp" />
     <ClCompile Include="source\BinaryTreeClass.cpp" />
     <ClCompile Include="source\Agent.cpp" />
     <ClCompile Include="source\IBehaviour.cpp" />
@@ -101,7 +102,8 @@
     <ClCompile Include="source\TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Decision.h" />
+    <ClInclude Include="include\BooleanDecision.h" />
+    <ClInclude Include="include\Decision.h" />
     <ClInclude Include="include\BinaryTreeClass.h" />
     <ClInclude Include="include\BehaviourPack.h" />
     <ClInclude Include="include\IBehaviour.h" />

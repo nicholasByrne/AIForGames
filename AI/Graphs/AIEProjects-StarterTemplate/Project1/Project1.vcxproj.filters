@@ -51,7 +51,10 @@
     <ClCompile Include="source\BinaryTreeClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Decision.cpp">
+    <ClCompile Include="source\Decision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BooleanDecision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,7 +95,10 @@
     <ClInclude Include="include\BinaryTreeClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Decision.h">
+    <ClInclude Include="include\Decision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BooleanDecision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

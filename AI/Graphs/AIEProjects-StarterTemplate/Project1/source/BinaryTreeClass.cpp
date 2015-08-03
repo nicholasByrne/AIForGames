@@ -41,5 +41,19 @@ bool BinaryTreeClass::Find(int value)
 
 void BinaryTreeClass::Remove(int value)
 {
-
+	if (m_rootNode != nullptr)
+	{
+		if (value < m_rootNode->m_value && m_rootNode->m_left != nullptr)
+		{
+			m_rootNode->m_left->Remove(value, m_rootNode);
+		}
+		else if (m_rootNode->m_value == value)
+		{
+			//FIND RIGHT LOWEST LEAF
+		}
+		else if (m_rootNode->m_value > value && m_rootNode->m_right != nullptr)
+		{
+			m_rootNode->m_right->Remove(value, m_rootNode);
+		}
+	}
 }

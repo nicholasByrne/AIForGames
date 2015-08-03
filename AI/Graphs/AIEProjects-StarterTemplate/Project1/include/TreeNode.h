@@ -16,5 +16,6 @@ public:
 	void AddValue(int value);
 	bool FindValue(int value);
 	void Remove(int value, TreeNode* parentNode);
+	int FindSmallestGreaterVal(TreeNode* startingNode);
 };
 

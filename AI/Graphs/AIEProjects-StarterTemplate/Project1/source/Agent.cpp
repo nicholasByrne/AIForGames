@@ -1,6 +1,7 @@
 #include "Agent.h"
 #include "IBehaviour.h"
 #include "BehaviourPack.h"
+#include "Decision.h"
 
 Agent::Agent()
 {
@@ -37,6 +38,9 @@ Agent::~Agent()
 
 void Agent::Update(float deltaTime)
 {
+	timer -= deltaTime;
+	//m_decision->makeDecision(); TODO
+
 	//iterator
 	std::list<IBehaviour*>::iterator iter;
 	//Sensing
