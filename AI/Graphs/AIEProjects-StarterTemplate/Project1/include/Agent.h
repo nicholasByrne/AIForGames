@@ -23,7 +23,7 @@ public:
 	Decision* m_decision; //root decision
 	float m_timer; //used by some decisions
 
-protected:
+//protected:
 	std::list<IBehaviour*> m_behaviours;
 	IBehaviour* m_behaviourTree; //root node of tree
 	//Agent* m_targetAgent;

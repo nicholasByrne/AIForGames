@@ -23,6 +23,8 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	//myGraph->PrintBFS(*myGraph->a_nodeVector.begin());
 
 	m_textureBox = new Texture("./Images/box0_256.png");
+	drawShortestPath = false;
+	gameObjectVector.push_back(new Agent(mousePos, m_textureBox, m_spritebatch));
 
 }
 
@@ -56,17 +58,82 @@ void Game1::Update(float deltaTime)
 	mousePos.y = mousePosy;
 
 	//Behaviours
+	//Object at mouse
+	gameObjectVector[0]->m_position.x = mousePos.x;
+	gameObjectVector[0]->m_position.y = mousePos.y;
+	
 	if (GetInput()->WasKeyPressed(GLFW_KEY_Q))
 	{
 		gameObjectVector.push_back(new Agent(mousePos, m_textureBox, m_spritebatch));
 	}
 
+	//if (GetInput()->WasKeyPressed(GLFW_KEY_S))
+	//{
+	//	//Agent* temp = new Agent(Vector2(mousePosx, mousePosy), m_textureBox, m_spritebatch);
+	//	//temp->AddBehaviour(new Arrive(&mousePos, 500));
+	//	//gameObjectVector.push_back(temp);
+	//}
 
-	if (GetInput()->WasKeyPressed(GLFW_KEY_S))
-	{ //TODO: test pursue/Evade
-		Agent* temp = new Agent(Vector2(mousePosx, mousePosy), m_textureBox, m_spritebatch);
-		temp->AddBehaviour(new Arrive(&mousePos, 500));
-		gameObjectVector.push_back(temp);
+	//Seek
+	if (GetInput()->WasKeyPressed(GLFW_KEY_1) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Seek(*gameObjectVector[0]));
+		}
+	}
+	//Flee
+	if (GetInput()->WasKeyPressed(GLFW_KEY_2) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Flee(*gameObjectVector[0]));
+		}
+	}
+	//Wander
+	//Pursue
+	if (GetInput()->WasKeyPressed(GLFW_KEY_4) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Pursue(*gameObjectVector[0]));
+		}
+	}
+	//Evade TODO
+	if (GetInput()->WasKeyPressed(GLFW_KEY_5) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Evade(*gameObjectVector[0]));
+		}
+	}
+	//Arrive
+	if (GetInput()->WasKeyPressed(GLFW_KEY_6) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Arrive(*gameObjectVector[0], 200.0f));
+		}
+	}
+	//Avoid TODO //used ontop of other behaviours
+	if (GetInput()->WasKeyPressed(GLFW_KEY_7) && gameObjectVector.size() > 1)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+			gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->AddBehaviour(new Avoid(gameObjectVector, 200.0f, 200.0f));
+		}
 	}
 
 	//GRAPH
@@ -122,6 +189,22 @@ void Game1::Update(float deltaTime)
 		}
 	}
 
+	//Print FindPathDijkstras
+	if (GetInput()->WasKeyPressed(GLFW_KEY_D) && drawShortestPath == false)
+	{
+		drawShortestPath = true;
+		std::list<Node*> endNodes;
+		endNodes.push_back(myGraph->a_nodeVector.back());
+		shortestPath = myGraph->FindPathDijkstras(myGraph->a_nodeVector[0], endNodes);//(myGraph->a_nodeVector.begin(), endNodes);
+	}
+	else if (GetInput()->WasKeyPressed(GLFW_KEY_D) && myGraph->a_nodeVector.empty() != true)
+	{
+		drawShortestPath = false;
+		shortestPath.clear();
+	}
+
+
+
 	for (int i = 0; i < gameObjectVector.size(); i++)
 	{
 		gameObjectVector[i]->Update(deltaTime);
@@ -144,7 +227,34 @@ void Game1::Draw()
 	{
 		gameObjectVector[i]->Draw();
 	}
+	//draw shortest path
+	if (drawShortestPath == true)
+	{
+		int i = 0;
+		for (std::list<Vector2>::iterator iter = shortestPath.begin(); iter != shortestPath.end(); ++iter)
+		{
+			std::string jimmy = std::to_string(i);
+			const char * c = jimmy.c_str();
+			//char* charr;
+			//charr = new char[jimmy.size() + 1];
+			m_spritebatch->DrawSprite(m_textureBox, iter->x, iter->y, 50.0f, 50.0f);
+			m_spritebatch->DrawString(m_arielFont, c, iter->x, iter->y + 50);
+			i++;
+		}
+	}
 
+	
+	//draw start node
+	if (myGraph->a_nodeVector.size() > 1)
+	{
+		m_spritebatch->SetRenderColor(255, 0, 0, 255);
+		m_spritebatch->DrawSprite(m_textureBox, myGraph->a_nodeVector[0]->position.x, myGraph->a_nodeVector[0]->position.y, 50.0f, 50.0f);
+
+		m_spritebatch->SetRenderColor(0, 0, 255, 255);
+		m_spritebatch->DrawSprite(m_textureBox, myGraph->a_nodeVector.back()->position.x, myGraph->a_nodeVector.back()->position.y, 50.0f, 50.0f);
+	}
+
+	m_spritebatch->SetRenderColor(255, 255, 255, 255);
 	m_spritebatch->End();
 
 }

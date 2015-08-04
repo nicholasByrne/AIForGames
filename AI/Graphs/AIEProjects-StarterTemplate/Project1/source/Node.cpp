@@ -37,6 +37,14 @@ Node::~Node()
 }
 
 //2 Way Edge
+void Node::InsertEdge(Node * end)
+{
+	float a_cost = Vector2::Distance(position, end->position);
+	nodeEdges.push_back(new Edge(this, end, a_cost));
+	end->nodeEdges.push_back(new Edge(end, this, a_cost));
+}
+
+//2 Way Edge
 void Node::InsertEdge(Node * end, int a_cost)
 {
 	nodeEdges.push_back(new Edge(this, end, a_cost));

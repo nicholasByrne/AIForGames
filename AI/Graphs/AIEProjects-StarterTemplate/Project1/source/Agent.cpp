@@ -38,7 +38,7 @@ Agent::~Agent()
 
 void Agent::Update(float deltaTime)
 {
-	timer -= deltaTime;
+	m_timer -= deltaTime;
 	//m_decision->makeDecision(); TODO
 
 	//iterator

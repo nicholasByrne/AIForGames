@@ -37,6 +37,8 @@ GameObject::~GameObject()
 void GameObject::Draw()
 {
 	m_spriteBatch->DrawSprite(m_texture, m_position.x, m_position.y, m_scale.x * m_texture->GetWidth(), m_scale.y * m_texture->GetHeight());
+
+	//m_spriteBatch->DrawSprite(m_texture, m_position.x, m_position.y, m_scale.x * 200, m_scale.y * 200);
 }
 
 void GameObject::AddForce(Vector2& a_force)

@@ -55,7 +55,7 @@ class Pursue : public IBehaviour
 {
 public:
 	Pursue(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
-	Pursue(Agent targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
+	Pursue(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
 	~Pursue();
 
 	Vector2* m_targetPos;
@@ -134,12 +134,12 @@ public:
 class Avoid : public IBehaviour
 {
 public:
-	Avoid(float maxSeeDist, float maxAvoidForce, std::vector<GameObject*>& objectVector) : m_maxSeeDistance(maxSeeDist), m_maxAvoidForce(maxAvoidForce), m_objectVector(&objectVector){};
+	Avoid(std::vector<Agent*>& objectVector, float maxSeeDist, float maxAvoidForce) : m_objectVector(&objectVector), m_maxSeeDistance(maxSeeDist), m_maxAvoidForce(maxAvoidForce){};
 	~Avoid();
 
 	float m_maxSeeDistance;
 	float m_maxAvoidForce;
-	std::vector<GameObject*>* m_objectVector;
+	std::vector<Agent*>* m_objectVector;
 	Vector2 ahead;
 	Vector2 ahead2;
 	virtual void Update(Agent* pAgent, float deltaTime)
@@ -151,13 +151,19 @@ public:
 
 		//find closest(biggest) threat // collision detection Line + circle?
 		GameObject* biggestThreat = nullptr;
-		float biggestThrestDist;
+		float biggestThrestDist = std::numeric_limits<float>::max();
+
 		for (int i = 0; i < m_objectVector->size(); i++)
 		{
 			//TODO MAKE LINE COLLISION?
 			bool collision = GameObject::CheckCollision(ahead, (*m_objectVector)[i]);
 			//if collision = true, and not previous threat || is closer than previous threat
-			if ((collision == true) && ((Vector2::Distance(pAgent->m_position, (*m_objectVector)[i]->m_position) < biggestThrestDist) || biggestThreat == nullptr))
+			if ((collision == true) && biggestThreat == nullptr)
+			{
+				biggestThreat = (*m_objectVector)[i];
+				biggestThrestDist = Vector2::Distance(pAgent->m_position, biggestThreat->m_position);
+			}
+			else if ((collision == true) && ((Vector2::Distance(pAgent->m_position, (*m_objectVector)[i]->m_position) < biggestThrestDist)));
 			{
 				biggestThreat = (*m_objectVector)[i];
 			}

@@ -179,7 +179,7 @@ void Graph::BFS_DFS(Node* startNode)
 
 
 
-void Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNodes)
+std::list<Vector2> Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNodes)
 {
 	for (int i = 0; i < a_nodeVector.size(); i++)
 	{
@@ -190,10 +190,10 @@ void Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNod
 
 	std::list<Node*> openList;
 	//std::list<Node*> closeList;
-
 	Node* currentNode;
 	Node* endNode = nullptr;
 	openList.push_front(startNode);
+	openList.front()->gScore = 0;
 
 	while (openList.empty() != true)
 	{
@@ -204,12 +204,13 @@ void Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNod
 		currentNode->traversed = true;
 
 		//if currentNode == potentialEndNode, break loop
-		std::list<Node*>::iterator jiter;
-		bool breakloop;
-		for ((*jiter) = potentialEndNodes.front(); (*jiter) != potentialEndNodes.back(); jiter++)
+		std::list<Node*>::iterator jiter; 
+		bool breakloop = false;
+		for (std::list<Node*>::iterator jiter = potentialEndNodes.begin(); jiter != potentialEndNodes.end(); jiter++)
 		{
 			if (currentNode == (*jiter))
 			{
+				endNode = currentNode;
 				breakloop == true;
 				break;
 			}
@@ -218,31 +219,37 @@ void Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNod
 			break;
 
 		//erase currentnode from openList
-		(*jiter) = openList.front();
+		jiter = openList.begin();
 		openList.erase(jiter); //erase needs an iterator
 		//closeList.push_back(currentNode);
 
 		//Add connections to openList if not traversed
 		for (int i = 0; i < currentNode->nodeEdges.size(); i++)
-		{
+		{	//if new node is found
 			if (currentNode->nodeEdges[i]->endNode->traversed == false)
 			{
-				openList.push_back(currentNode->nodeEdges[i]->endNode);
-				currentNode->nodeEdges[i]->endNode->gScore = currentNode->gScore + currentNode->nodeEdges[i]->cost;
-				currentNode->nodeEdges[i]->endNode->parentNode = currentNode;
+				float newG = currentNode->gScore + currentNode->nodeEdges[i]->cost;
+				if (newG < currentNode->nodeEdges[i]->endNode->gScore)
+				{
+					currentNode->nodeEdges[i]->endNode->gScore = currentNode->gScore + currentNode->nodeEdges[i]->cost;
+					currentNode->nodeEdges[i]->endNode->parentNode = currentNode;
+						
+					//if node already on the openlist (don't re-add it) <- TODO ?
+					openList.push_back(currentNode->nodeEdges[i]->endNode);
+				}
 			}
 		}
 	}
 
 	//calculate path
 	std::list<Vector2> path;
-	endNode = currentNode;
+	currentNode = endNode;
 	while (currentNode != nullptr)
 	{
 		path.push_front(currentNode->position);
 		currentNode = currentNode->parentNode;
 	}
-
+	return path;
 }
 
 
@@ -252,8 +259,8 @@ void Graph::FindAStar(Node* startNode, Node* endNode)
 	{
 		a_nodeVector[i]->parentNode = nullptr;
 		a_nodeVector[i]->gScore = std::numeric_limits<float>::max();
-		a_nodeVector[i]->hScore = 
-		a_nodeVector[i]->fScore = 
+		a_nodeVector[i]->hScore = 0;
+		a_nodeVector[i]->fScore = 0;
 		a_nodeVector[i]->traversed = false;
 	}
 
@@ -297,7 +304,7 @@ void Graph::FindAStar(Node* startNode, Node* endNode)
 
 	//calculate path
 	std::list<Vector2> path;
-	endNode = currentNode;
+	currentNode = endNode;
 	while (currentNode != nullptr)
 	{
 		path.push_front(currentNode->position);

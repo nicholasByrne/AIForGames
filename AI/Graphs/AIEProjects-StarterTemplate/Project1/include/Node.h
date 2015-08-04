@@ -22,6 +22,7 @@ public:
 	std::vector<Edge*> nodeEdges;
 	std::vector<Edge*>::iterator iter;
 
+	void InsertEdge(Node * end);
 	void InsertEdge(Node * end, int a_cost);
 	void RemoveEdge(Node * edgeEndNode);
 

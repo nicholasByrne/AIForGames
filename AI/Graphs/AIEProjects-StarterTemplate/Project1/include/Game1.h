@@ -11,6 +11,7 @@ Description:
 #include "GameObject.h"
 #include "Agent.h"
 #include <vector>
+#include <list>
 #include "BehaviourPack.h"
 
 class SpriteBatch;
@@ -29,17 +30,20 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Draw();
 
-
+	
 
 protected:
 	int *xpos;
 	int *ypos;
-	std::vector<GameObject*> gameObjectVector;
+	//std::vector<GameObject*> gameObjectVector;
+	std::vector<Agent*> gameObjectVector;
+
 	Font* m_arielFont;
 	SpriteBatch *m_spritebatch;
 	Graph * myGraph;
-
-
+	bool drawShortestPath;
+	std::list<Vector2> shortestPath;
+	
 	Vector2 mousePos;
 
 	Texture* m_textureBox;
