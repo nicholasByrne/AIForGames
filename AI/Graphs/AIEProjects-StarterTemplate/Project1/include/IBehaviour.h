@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include "Decision.h" //Yay??
 
 class Agent;
 enum BehaviourResult { Success, Failure, Running };
@@ -20,7 +21,7 @@ class Composite : IBehaviour
 	~Composite();
 
 	std::list<IBehaviour*> m_childBehaviours;
-	IBehaviour* m_pendingChild;
+	IBehaviour* m_pendingChild = nullptr;
 
 	virtual void Update(Agent* pAgent, float deltaTime) = 0;
 

@@ -253,7 +253,7 @@ std::list<Vector2> Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &p
 }
 
 
-void Graph::FindAStar(Node* startNode, Node* endNode)
+std::list<Vector2> Graph::FindAStar(Node* startNode, Node* endNode)
 {
 	for (int i = 0; i < a_nodeVector.size(); i++)
 	{
@@ -310,7 +310,7 @@ void Graph::FindAStar(Node* startNode, Node* endNode)
 		path.push_front(currentNode->position);
 		currentNode = currentNode->parentNode;
 	}
-
+	return path;
 }
 
 

@@ -54,9 +54,6 @@
     <ClCompile Include="source\Decision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\BooleanDecision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game1.h">
@@ -96,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Decision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BooleanDecision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

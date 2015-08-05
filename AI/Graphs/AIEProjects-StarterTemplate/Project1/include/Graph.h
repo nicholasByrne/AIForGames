@@ -34,7 +34,7 @@ public:
 	void BFS_DFS(Node* startNode);
 	void FindPathDijkstras();
 	std::list<Vector2> FindPathDijkstras(Node *startNode, std::list<Node*> &potentialEndNodes);
-	void FindAStar(Node* startNode, Node* endNode);
+	std::list<Vector2> FindAStar(Node* startNode, Node* endNode);
 
 	void PrintBFS(Node* startNode);
 	void PrintDFS(Node* startNode);
