@@ -19,6 +19,8 @@ public:
 	void AddBehaviour(IBehaviour* a_behaviour);
 	//Agent* m_targetAgent;
 
+	Vector2 m_force;
+
 	Agent* m_target; //other agent, used by some decisions
 	Decision* m_decision; //root decision
 	float m_timer; //used by some decisions

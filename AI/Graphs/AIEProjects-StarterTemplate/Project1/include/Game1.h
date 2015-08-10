@@ -30,6 +30,7 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Draw();
 
+	Node* testArray[10][10];
 	
 
 protected:

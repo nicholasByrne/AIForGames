@@ -29,7 +29,7 @@ public:
 };
 
 //Sets agents 'timer' to length;
-class SetTimeAction : Decision
+class SetTimeAction : public Decision
 {
 public:
 	SetTimeAction(float time) : m_length(time){};
@@ -43,7 +43,7 @@ public:
 };
 
 //Branches to another decision based on 'm_timer'
-class CheckTimerDecision : BooleanDecision
+class CheckTimerDecision : public BooleanDecision
 {
 public:
 	CheckTimerDecision();
@@ -60,7 +60,7 @@ public:
 
 
 //Branches to another decision based on distance between 2 vectors
-class CheckDistanceDecision : BooleanDecision //runs true if magnitude between owner.pos and target.pos is < distance
+class CheckDistanceDecision : public BooleanDecision //runs true if magnitude between owner.pos and target.pos is < distance
 {
 public:
 	CheckDistanceDecision();
@@ -70,7 +70,7 @@ public:
 
 	void makeDecision()
 	{
-		if (Vector2((*m_owner).m_position - (*m_owner).m_target->m_position).Magnitude < distance)
+		if (Vector2((*m_owner).m_position - (*m_owner).m_target->m_position).Magnitude() < distance)
 			trueDecision->MakeDecision();
 		else
 			falseDecision->MakeDecision();
@@ -78,7 +78,7 @@ public:
 };
 
 
-class WanderAction : Decision
+class WanderAction : public Decision
 {
 public:
 	WanderAction();
@@ -88,7 +88,7 @@ public:
 };
 
 
-class FleeAction : Decision
+class FleeAction : public Decision
 {
 public:
 	FleeAction();

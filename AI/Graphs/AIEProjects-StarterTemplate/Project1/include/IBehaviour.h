@@ -1,61 +1,142 @@
 #pragma once
 #include <list>
+#include <string>
+#include <iostream>
 #include "Decision.h" //Yay??
 
 class Agent;
-enum BehaviourResult { Success, Failure, Running };
 
+enum BehaviourResult { Success, Failure, Pending };
+
+//Base Behaviour class
 class IBehaviour
 {
 public:
-	IBehaviour();
+	IBehaviour() : m_weight(1.0f){};
 	~IBehaviour();
 
-	virtual void Update(Agent* pAgent, float deltaTime) = 0;
+	float m_weight;
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime) = 0;
 };
 
 //Base class for 'Sequence' and 'Selector' nodes
-class Composite : IBehaviour
+class Composite : public IBehaviour
 {
+public:
 	Composite();
 	~Composite();
 
 	std::list<IBehaviour*> m_childBehaviours;
+	IBehaviour* m_child;
 	IBehaviour* m_pendingChild = nullptr;
-
-	virtual void Update(Agent* pAgent, float deltaTime) = 0;
+	int pendingChildIndex = 0;
+	BehaviourResult result;
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime) = 0;
 
 };
 
 //'AND' node for running a list of behaviours consecutively until one fails
-class Sequence : Composite
+class Sequence : public Composite
 {
+public:
 	Sequence();
 	~Sequence();
 
-	void Update(Agent* pAgent, float deltaTime)
-	{
-		//foreach child in childBehaviours
-		//	if child.execute(agent) == Failure
-		//		return Failure
-		//return Success
+	BehaviourResult Update(Agent* pAgent, float deltaTime)
+	{		
+		for (std::list<IBehaviour*>::iterator iter = m_childBehaviours.begin(); iter != m_childBehaviours.end(); ++iter)
+		{
+			if (m_pendingChild != nullptr && (*iter) != m_pendingChild)
+			{
+				continue; //until we get to pending child
+			}
+
+			m_pendingChild = nullptr;
+			result = (*iter)->Update(pAgent, deltaTime);
+
+			if (result == Failure)
+			{
+				return Failure;
+			}
+			else if (result == Pending)
+			{
+				m_pendingChild = (*iter);
+				return Pending;
+			}
+		}
+		return Success;
 	}
 };
 
 //'OR' node for running a list of behaviours until one succeeds 
-class Selector : Composite
+class Selector : public Composite
 {
+public:
 	Selector();
 	~Selector();
 
-	void Update(Agent* pAgent, float deltaTime)
+	BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
-		//foreach child in childBehaviours
-		//	if child.execute(agent) == Success
-		//		return Success
-		//return Failure
+		for (std::list<IBehaviour*>::iterator iter = m_childBehaviours.begin(); iter != m_childBehaviours.end(); ++iter)
+		{
+			if (m_pendingChild != nullptr && (*iter) != m_pendingChild)
+			{
+				continue;
+			}
 
-		
+			m_pendingChild = nullptr;
+			result = (*iter)->Update(pAgent, deltaTime);
 
+			if (result == Success)
+			{
+				return Success;
+			}
+			else if (result == Pending)
+			{
+				m_pendingChild = (*iter);
+				return Pending;
+			}
+		}
+		return Failure;
+	}
+};
+
+//Inverts the result of its child Behaviour
+class InverseDecorator : public IBehaviour
+{
+public:
+	InverseDecorator();
+	~InverseDecorator();
+
+	IBehaviour* m_child;
+	BehaviourResult result;
+
+	BehaviourResult Update(Agent* pAgent, float deltaTime)
+	{
+		result = m_child->Update(pAgent, deltaTime);
+		switch (result)
+		{
+		case Success: 
+			return Failure;
+		case Failure:
+			return Success;
+		}
+	}
+};
+
+
+class LogDecorator : public IBehaviour
+{
+	LogDecorator();
+	~LogDecorator();
+
+	IBehaviour* m_child;
+	std::string m_message;
+
+	BehaviourResult Update(Agent* pAgent, float deltaTime)
+	{ 
+		//TODO print somewhere useful (like in game), make a function to change message?
+		std::cout << m_message;
+		return m_child->Update(pAgent, deltaTime);
 	}
 };

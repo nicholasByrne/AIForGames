@@ -6,97 +6,104 @@
 #include <algorithm>
 #include <vector>
 
-class Seek : public IBehaviour
+class SeekBehaviour : public IBehaviour
 {
 public:
-	Seek(Vector2* targetPos) : m_targetPos(targetPos){};
-	Seek(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
-	~Seek();
+	SeekBehaviour(Vector2* targetPos) : m_targetPos(targetPos){};
+	SeekBehaviour(Vector2* targetPos, float weight) : m_targetPos(targetPos), m_weight(weight){}; //TODO add cpp for initialisations
+	SeekBehaviour(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
+	SeekBehaviour(Agent& targetAgent, float weight) : m_targetPos(&targetAgent.m_position), m_weight(weight){};
+	~SeekBehaviour();
 
 	Vector2* m_targetPos;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//Apply seek force to pAgent
-		Vector2 m_toTarget = Vector2::Normalise(*m_targetPos - pAgent->m_position) * pAgent->m_maxVelocity;
-		pAgent->AddForce( (m_toTarget) * 1000.0f) ;
+		Vector2 toTarget = Vector2::Normalise(*m_targetPos - pAgent->m_position) * pAgent->m_maxVelocity;
+		pAgent->m_force += (toTarget* 1000.0f);
+		//pAgent->AddForce(toTarget * 1000.0f);
+		return Success;
 	}
 };
 
 
-class Flee : public IBehaviour
+class FleeBehaviour : public IBehaviour
 {
 public:
-	Flee(Vector2* targetPos) : m_targetPos(targetPos){};
-	Flee(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
-	~Flee();
+	FleeBehaviour(Vector2* targetPos) : m_targetPos(targetPos){};
+	FleeBehaviour(Agent& targetAgent) : m_targetPos(&targetAgent.m_position){};
+	~FleeBehaviour();
 
 	Vector2* m_targetPos;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//Apply flee force to pAgent
 		Vector2 m_fromTarget = Vector2::Normalise(pAgent->m_position - *m_targetPos) * pAgent->m_maxVelocity;
-		pAgent->AddForce(m_fromTarget - pAgent->m_velocity);
+		pAgent->m_force += m_fromTarget - pAgent->m_velocity;
+		return Success;
 	}
 };
 
 
-class Wander : public IBehaviour //TODO Wander
+class WanderBehaviour : public IBehaviour //TODO Wander
 {
 public:
 	Vector2 m_previousTarget;
-	virtual void Update(float f_radius, float f_distance, float f_jitter)
+	virtual BehaviourResult Update(float f_radius, float f_distance, float f_jitter)
 	{
 
 	}
 };
 
 
-class Pursue : public IBehaviour
+class PursueBehaviour : public IBehaviour
 {
 public:
-	Pursue(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
-	Pursue(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
-	~Pursue();
+	PursueBehaviour(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
+	PursueBehaviour(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
+	~PursueBehaviour();
 
 	Vector2* m_targetPos;
 	Vector2* m_targetVelocity;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//apply purse force to pAgent
 		Vector2 direction = (*m_targetPos + *m_targetVelocity) - pAgent->m_position;
-		pAgent->AddForce(Vector2::Normalise(direction) * pAgent->m_maxVelocity - pAgent->m_velocity);
+		pAgent->m_force += Vector2::Normalise(direction) * pAgent->m_maxVelocity - pAgent->m_velocity;
+		return Success;
 	}
 };
 
 
-class Evade : public IBehaviour
+class EvadeBehaviour : public IBehaviour
 {
 public:
-	Evade(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
-	Evade(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
-	~Evade();
+	EvadeBehaviour(Vector2* targetPos, Vector2* targetVelocity) : m_targetPos(targetPos), m_targetVelocity(targetVelocity){};
+	EvadeBehaviour(Agent& targetAgent) : m_targetPos(&targetAgent.m_position), m_targetVelocity(&targetAgent.m_velocity){};
+	~EvadeBehaviour();
 
 	Vector2* m_targetPos;
 	Vector2* m_targetVelocity;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//apply evade force to pAgent
-		Vector2 direction = (*m_targetPos - *m_targetVelocity) - pAgent->m_position;
-		pAgent->AddForce(Vector2::Normalise(direction) * pAgent->m_maxVelocity - pAgent->m_velocity);
+		Vector2 direction = -1 * ((*m_targetPos + *m_targetVelocity) - pAgent->m_position);
+		pAgent->m_force += Vector2::Normalise(direction) * pAgent->m_maxVelocity - pAgent->m_velocity;
+		return Success;
 	}
 };
 
 
-class Arrive : public IBehaviour
+class ArriveBehaviour : public IBehaviour
 {
 public:
-	Arrive(Vector2* targetPos, float arriveRadius) : m_targetPos(targetPos), m_arriveRadius(arriveRadius){};
-	Arrive(Agent& targetAgent, float arriveRadius) : m_targetPos(&targetAgent.m_position), m_arriveRadius(arriveRadius){};
-	~Arrive();
+	ArriveBehaviour(Vector2* targetPos, float arriveRadius) : m_targetPos(targetPos), m_arriveRadius(arriveRadius){};
+	ArriveBehaviour(Agent& targetAgent, float arriveRadius) : m_targetPos(&targetAgent.m_position), m_arriveRadius(arriveRadius){};
+	~ArriveBehaviour();
 
 	Vector2* m_targetPos;
 	float m_arriveRadius;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//direction and distance to target
 		Vector2 direction = (Vector2::Normalise(*m_targetPos - pAgent->m_position));
@@ -124,25 +131,26 @@ public:
 		}
 
 		//add force to pAgent
-		pAgent->AddForce(force - pAgent->m_velocity);
+		pAgent->m_force += force - pAgent->m_velocity;
+		return Success;
 	}
 
 };
 
 
 //Avoid
-class Avoid : public IBehaviour
+class AvoidBehaviour : public IBehaviour
 {
 public:
-	Avoid(std::vector<Agent*>& objectVector, float maxSeeDist, float maxAvoidForce) : m_objectVector(&objectVector), m_maxSeeDistance(maxSeeDist), m_maxAvoidForce(maxAvoidForce){};
-	~Avoid();
+	AvoidBehaviour(std::vector<Agent*>& objectVector, float maxSeeDist, float maxAvoidForce) : m_objectVector(&objectVector), m_maxSeeDistance(maxSeeDist), m_maxAvoidForce(maxAvoidForce){};
+	~AvoidBehaviour();
 
 	float m_maxSeeDistance;
 	float m_maxAvoidForce;
 	std::vector<Agent*>* m_objectVector;
 	Vector2 ahead;
 	Vector2 ahead2;
-	virtual void Update(Agent* pAgent, float deltaTime)
+	virtual BehaviourResult Update(Agent* pAgent, float deltaTime)
 	{
 		//how far ahead is "seen"
 		float dynamicLength = pAgent->m_velocity.Magnitude() / pAgent->m_maxVelocity;
@@ -177,13 +185,31 @@ public:
 			avoidanceForce * m_maxAvoidForce;
 		}
 		//TODO v fix this? v
-		pAgent->AddForce(avoidanceForce);
+		pAgent->m_force += avoidanceForce;
+		return Success;
 	}
 };
 
 //Idle?
 
-class AttackAction : IBehaviour
+class AttackBehaviour : public IBehaviour
+{
+
+};
+
+
+class CheckDistanceBehaviour : public IBehaviour
+{
+
+};
+
+
+class CheckTimerBehaviour : public IBehaviour
+{
+
+};
+
+class SetTimerBehaviour : public IBehaviour
 {
 
 };

@@ -26,6 +26,24 @@ Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscree
 	drawShortestPath = false;
 	gameObjectVector.push_back(new Agent(mousePos, m_textureBox, m_spritebatch));
 
+	//testArray[10][10];
+	for (int i = 0; i < 10; ++i)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			myGraph->AddNode(i * 50 + 50, j * 50 + 50);
+		}
+	}
+	for (int i = 0; i < 100; i++)
+	{
+		if (i != 0 && i != 10 && i != 20 && i != 30 && i != 40 && i != 50 && i != 60 && i != 70 && i != 80 && i != 90)
+			myGraph->a_nodeVector[i]->InsertEdge(myGraph->a_nodeVector[i - 1]);
+		if (i != 0 && i != 1 && i != 2 && i != 3 && i != 4 && i != 5 && i != 6 && i != 7 && i != 8 && i != 9)
+			myGraph->a_nodeVector[i]->InsertEdge(myGraph->a_nodeVector[i - 10]);
+	}
+
+
+
 }
 
 Game1::~Game1()
@@ -81,7 +99,7 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Seek(*gameObjectVector[0]));
+			gameObjectVector[i]->AddBehaviour(new SeekBehaviour(*gameObjectVector[0]));
 		}
 	}
 	//Flee
@@ -91,18 +109,18 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Flee(*gameObjectVector[0]));
+			gameObjectVector[i]->AddBehaviour(new FleeBehaviour(*gameObjectVector[0]));
 		}
 	}
-	//Wander
-	//Pursue
+	//Wander TODO
+	//Pursue TODO test
 	if (GetInput()->WasKeyPressed(GLFW_KEY_4) && gameObjectVector.size() > 1)
 	{
 		for (int i = 1; i < gameObjectVector.size(); ++i)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Pursue(*gameObjectVector[0]));
+			gameObjectVector[i]->AddBehaviour(new PursueBehaviour(*gameObjectVector[0]));
 		}
 	}
 	//Evade TODO
@@ -112,7 +130,7 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Evade(*gameObjectVector[0]));
+			gameObjectVector[i]->AddBehaviour(new EvadeBehaviour(*gameObjectVector[0]));
 		}
 	}
 	//Arrive
@@ -122,7 +140,7 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Arrive(*gameObjectVector[0], 200.0f));
+			gameObjectVector[i]->AddBehaviour(new ArriveBehaviour(*gameObjectVector[0], 200.0f));
 		}
 	}
 	//Avoid TODO //used ontop of other behaviours
@@ -132,7 +150,7 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new Avoid(gameObjectVector, 200.0f, 200.0f));
+			gameObjectVector[i]->AddBehaviour(new AvoidBehaviour(gameObjectVector, 200.0f, 200.0f));
 		}
 	}
 
@@ -196,12 +214,28 @@ void Game1::Update(float deltaTime)
 		std::list<Node*> endNodes;
 		endNodes.push_back(myGraph->a_nodeVector.back());
 		shortestPath = myGraph->FindPathDijkstras(myGraph->a_nodeVector[0], endNodes);//(myGraph->a_nodeVector.begin(), endNodes);
+		std::cout << shortestPath.size();
 	}
 	else if (GetInput()->WasKeyPressed(GLFW_KEY_D) && myGraph->a_nodeVector.empty() != true)
 	{
 		drawShortestPath = false;
 		shortestPath.clear();
 	}
+
+	//Print AStarPath
+	if (GetInput()->WasKeyPressed(GLFW_KEY_F) && drawShortestPath == false)
+	{
+		drawShortestPath = true;
+		shortestPath = myGraph->FindAStar(myGraph->a_nodeVector[0], myGraph->a_nodeVector.back());//(myGraph->a_nodeVector.begin(), endNodes);
+		std::cout << shortestPath.size();
+	}
+	else if (GetInput()->WasKeyPressed(GLFW_KEY_F) && myGraph->a_nodeVector.empty() != true)
+	{
+		drawShortestPath = false;
+		shortestPath.clear();
+	}
+	
+
 
 
 

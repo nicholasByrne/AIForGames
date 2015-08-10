@@ -12,7 +12,6 @@ Graph::Graph()
 	selectedNode = nullptr;
 	m_startNode = nullptr;
 	m_endNode = nullptr;
-	
 }
 
 Graph::~Graph()
@@ -48,29 +47,6 @@ void Graph::RemoveNode(Node * toRemove)
 		else
 			iter++;
 	}
-
-	//for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
-	//{
-	//	if ((*iter) == toRemove)
-	//	{
-	//		//if 2way edge, remove edge to this, first
-	//		toRemove->RemoveEdge((*iter));
-	//		//then remove edge from this
-	//		(*iter)->RemoveEdge(toRemove);
-	//	}
-	//	//(*iter)->RemoveEdge(toRemove);	
-	//}
-	//
-	////remove node
-	//for (iter = a_nodeVector.begin(); iter != a_nodeVector.end(); iter++)
-	//{
-	//	if ((*iter) == toRemove)
-	//	{
-	//		delete (*iter);
-	//		a_nodeVector.erase(iter);
-	//		break;
-	//	}
-	//}
 }
 
 
@@ -79,17 +55,11 @@ void Graph::AddNode(float x, float y)
 	a_nodeVector.push_back(new Node(x, y));
 }
 
+
 void Graph::AddNode(Vector2& vectorA)
 {
 	AddNode(vectorA.x, vectorA.y);
 }
-
-
-
-//float Graph::CompareFScore(Node* first, Node* second)
-//{
-//	return first->fScore > second->fScore;
-//}
 
 
 void Graph::BFS(Node* startNode)
@@ -189,7 +159,6 @@ std::list<Vector2> Graph::FindPathDijkstras(Node *startNode, std::list<Node*> &p
 	}
 
 	std::list<Node*> openList;
-	//std::list<Node*> closeList;
 	Node* currentNode;
 	Node* endNode = nullptr;
 	openList.push_front(startNode);
@@ -259,52 +228,69 @@ std::list<Vector2> Graph::FindAStar(Node* startNode, Node* endNode)
 	{
 		a_nodeVector[i]->parentNode = nullptr;
 		a_nodeVector[i]->gScore = std::numeric_limits<float>::max();
-		a_nodeVector[i]->hScore = 0;
-		a_nodeVector[i]->fScore = 0;
+		a_nodeVector[i]->hScore = std::numeric_limits<float>::max();
+		a_nodeVector[i]->fScore = std::numeric_limits<float>::max(); //SORT BY THIS?
 		a_nodeVector[i]->traversed = false;
 	}
 
 	std::list<Node*> openList;
-	std::list<Node*> closeList;
 
 	Node* currentNode;
 	openList.push_front(startNode);
-
+	openList.front()->gScore = 0;
+	
 	while (openList.empty() != true)
 	{
+		//sort list by fScore
 		openList.sort(CompareFScorePlz());
 
 		currentNode = openList.front();
+		currentNode->traversed = true;
 
+		//if endNode was found
 		if (currentNode == endNode)
 		{
 			break;
 		}
 
+		//Pop current node from openList
 		openList.pop_front();
-		currentNode->traversed = true;
 
 		//for all edges
 		for (int i = 0; i < currentNode->nodeEdges.size(); i++)
 		{
 			float gScore = currentNode->gScore + currentNode->nodeEdges[i]->cost;
-			//if new shortest path
 			if ((currentNode->nodeEdges[i]->endNode->parentNode == nullptr) || (currentNode->nodeEdges[i]->endNode->gScore < gScore))
 			{
-				currentNode->nodeEdges[i]->endNode->traversed = true;
-				currentNode->nodeEdges[i]->endNode->gScore = gScore;
-				currentNode->nodeEdges[i]->endNode->hScore = Vector2::Distance(currentNode->nodeEdges[i]->endNode->position, endNode->position);
-				currentNode->nodeEdges[i]->endNode->fScore = currentNode->nodeEdges[i]->endNode->gScore + currentNode->nodeEdges[i]->endNode->hScore;
-				currentNode->nodeEdges[i]->endNode->parentNode = currentNode;
+				if (currentNode->nodeEdges[i]->endNode->traversed == false)
+				{
+					bool foundInOpenList = false;
+					for (auto iter2 = openList.begin(); iter2 != openList.end(); iter2++)
+					{
+						if (*iter2 == currentNode->nodeEdges[i]->endNode)
+						{
+							foundInOpenList = true;
+							break;
+						}
+					}
+					if (!foundInOpenList)
+					{
+						openList.push_back(currentNode->nodeEdges[i]->endNode);
+					}
+					currentNode->nodeEdges[i]->endNode->traversed = true;
+					currentNode->nodeEdges[i]->endNode->gScore = gScore;
+					currentNode->nodeEdges[i]->endNode->hScore = Vector2::Distance(currentNode->nodeEdges[i]->endNode->position, endNode->position);
+					currentNode->nodeEdges[i]->endNode->fScore = currentNode->nodeEdges[i]->endNode->gScore + currentNode->nodeEdges[i]->endNode->hScore;
+					currentNode->nodeEdges[i]->endNode->parentNode = currentNode;
+				}
 			}
-			if (currentNode->nodeEdges[i]->endNode->traversed == false)
-				currentNode->nodeEdges[i]->endNode->traversed = true;
 		}
 	}
 
 	//calculate path
 	std::list<Vector2> path;
 	currentNode = endNode;
+	startNode->parentNode = nullptr;
 	while (currentNode != nullptr)
 	{
 		path.push_front(currentNode->position);

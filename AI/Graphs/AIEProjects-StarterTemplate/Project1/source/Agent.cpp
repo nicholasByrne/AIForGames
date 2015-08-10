@@ -22,6 +22,7 @@ Agent::Agent(Vector2& startingPos, Texture* texture, SpriteBatch* spriteBatch)
 	m_mass = 1;*/
 
 	m_scale = Vector2(0.25f, 0.25f);
+	m_force = Vector2(0.0f, 0.0f);
 }
 
 
@@ -39,6 +40,12 @@ Agent::~Agent()
 void Agent::Update(float deltaTime)
 {
 	m_timer -= deltaTime;
+	m_force.x = 0.0f;
+	m_force.y = 0.0f;
+	//AddForce(m_force);
+
+	//m_behaviourTree->Update(this, deltaTime);
+
 	//m_decision->makeDecision(); TODO
 
 	//iterator
@@ -58,7 +65,7 @@ void Agent::Update(float deltaTime)
 	{
 		(*iter)->Update(this, deltaTime);
 	}
-
+	AddForce(m_force);
 	//m_behaviours.clear();
 
 	m_velocity += m_acceleration * deltaTime;
