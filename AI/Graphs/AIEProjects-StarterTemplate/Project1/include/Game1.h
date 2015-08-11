@@ -13,6 +13,7 @@ Description:
 #include <vector>
 #include <list>
 #include "BehaviourPack.h"
+#include "CollisionManager.h"
 
 class SpriteBatch;
 
@@ -31,7 +32,7 @@ public:
 	virtual void Draw();
 
 	Node* testArray[10][10];
-	
+	std::vector<Agent*>* GetGameObjectVector();
 
 protected:
 	int *xpos;

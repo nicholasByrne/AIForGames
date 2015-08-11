@@ -7,6 +7,8 @@
 
 Game1::Game1(unsigned int windowWidth, unsigned int windowHeight, bool fullscreen, const char *title) : Application(windowWidth, windowHeight, fullscreen, title)
 {
+	CollisionManager::Create(this);
+
 	xpos = new int;
 	ypos = new int;
 	m_spritebatch = SpriteBatch::Factory::Create(this, SpriteBatch::GL3);
@@ -60,6 +62,12 @@ Game1::~Game1()
 	}
 	gameObjectVector.clear();
 	
+}
+
+
+std::vector<Agent*>* Game1::GetGameObjectVector()
+{
+	return &gameObjectVector;
 }
 
 
@@ -150,7 +158,7 @@ void Game1::Update(float deltaTime)
 		{
 			if (gameObjectVector[i]->m_behaviours.empty() != true)
 			gameObjectVector[i]->m_behaviours.pop_front();
-			gameObjectVector[i]->AddBehaviour(new AvoidBehaviour(gameObjectVector, 200.0f, 200.0f));
+			//gameObjectVector[i]->AddBehaviour(new AvoidBehaviour(gameObjectVector, 200.0f, 200.0f));
 		}
 	}
 
@@ -236,6 +244,17 @@ void Game1::Update(float deltaTime)
 	}
 	
 
+	//Give drawShortestPath to gameObjects
+	if (GetInput()->WasKeyPressed(GLFW_KEY_T) && drawShortestPath == true)
+	{
+		for (int i = 1; i < gameObjectVector.size(); ++i)
+		{
+			if (gameObjectVector[i]->m_behaviours.empty() != true)
+				gameObjectVector[i]->m_behaviours.pop_front();
+			gameObjectVector[i]->SetPath(shortestPath);
+			gameObjectVector[i]->AddBehaviour(new SeekPathBehaviour(1.0f));
+		}
+	}
 
 
 

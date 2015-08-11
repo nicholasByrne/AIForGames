@@ -467,3 +467,21 @@ Node* Graph::GraphNodeClicked(Vector2& vectorA)
 {
 	return GraphNodeClicked(vectorA.x, vectorA.y);
 }
+
+
+Node* Graph::FindClosestNode(Vector2& position)
+{
+	if (a_nodeVector.size() == 0)
+		return nullptr;
+
+	Node* closest = a_nodeVector[0];
+	float closestDist = Vector2(position - a_nodeVector[0]->position).MagnitudeSqrd();
+	for (int i = 1; i < a_nodeVector.size(); ++i)
+	{
+		if (Vector2(position - a_nodeVector[0]->position).MagnitudeSqrd() < closestDist)
+		{
+			closestDist = Vector2(position - a_nodeVector[0]->position).MagnitudeSqrd();
+		}
+	}
+	return closest;
+}

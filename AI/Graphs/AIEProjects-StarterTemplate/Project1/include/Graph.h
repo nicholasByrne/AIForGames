@@ -50,6 +50,8 @@ public:
 	Node* GraphNodeClicked(float a_x, float a_y);
 	Node* GraphNodeClicked(Vector2& vectorA);
 
+	Node* FindClosestNode(Vector2& position);
+
 
 	struct CompareGScorePlz
 	{

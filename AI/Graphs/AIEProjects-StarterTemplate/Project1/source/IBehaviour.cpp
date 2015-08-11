@@ -3,7 +3,7 @@
 
 IBehaviour::IBehaviour()
 {
-
+	m_weight = 1.0f;
 }
 
 

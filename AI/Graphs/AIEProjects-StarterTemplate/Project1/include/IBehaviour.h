@@ -12,7 +12,7 @@ enum BehaviourResult { Success, Failure, Pending };
 class IBehaviour
 {
 public:
-	IBehaviour() : m_weight(1.0f){};
+	IBehaviour();
 	~IBehaviour();
 
 	float m_weight;

@@ -56,7 +56,7 @@ void Agent::Update(float deltaTime)
 		//Add or remove behaviours from m_behaviours list
 
 
-
+	
 
 
 	
@@ -93,4 +93,10 @@ void Agent::Update(float deltaTime)
 void Agent::AddBehaviour(IBehaviour* a_behaviour)
 {
 	m_behaviours.push_back(a_behaviour);
+}
+
+
+void Agent::SetPath(std::list<Vector2> path)
+{
+	m_path = path;
 }
