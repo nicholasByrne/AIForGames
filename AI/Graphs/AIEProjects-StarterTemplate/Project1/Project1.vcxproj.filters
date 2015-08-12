@@ -60,6 +60,12 @@
     <ClCompile Include="source\CollisionManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\GameObjectPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Zombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game1.h">
@@ -102,6 +108,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CollisionManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zombie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

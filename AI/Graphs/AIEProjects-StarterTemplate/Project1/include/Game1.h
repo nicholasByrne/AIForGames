@@ -14,6 +14,7 @@ Description:
 #include <list>
 #include "BehaviourPack.h"
 #include "CollisionManager.h"
+#include "GameObjectPool.h"
 
 class SpriteBatch;
 
@@ -37,7 +38,13 @@ public:
 protected:
 	int *xpos;
 	int *ypos;
-	//std::vector<GameObject*> gameObjectVector;
+	std::vector<GameObject*> gameObjectVector;
+
+	//Object Pool Stuff
+	std::list<GameObject*> gameObjects;
+	GameObjectPool gameObjectPool;
+
+
 	std::vector<Agent*> gameObjectVector;
 
 	Font* m_arielFont;

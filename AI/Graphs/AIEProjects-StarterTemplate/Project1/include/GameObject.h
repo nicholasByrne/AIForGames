@@ -8,7 +8,7 @@ class Texture;
 class GameObject
 {
 public:
-	GameObject(); // : m_texture(nullptr), m_position(Vector2()){}
+	GameObject();
 	GameObject(Vector2& startingPos, Texture* texture, SpriteBatch* spriteBatch);
 	virtual ~GameObject();
 
@@ -26,9 +26,9 @@ public:
 	float m_friction;
 	float m_mass;
 	float m_maxVelocity;
+	std::string tag;
 
 	void AddForce(Vector2& a_force);
-	std::string tag;
 
 	static bool CheckCollision(GameObject* object1, GameObject* object2);
 	static bool CheckCollision(Vector2& point, GameObject* object2);

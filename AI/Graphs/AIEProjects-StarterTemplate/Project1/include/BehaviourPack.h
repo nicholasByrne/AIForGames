@@ -202,12 +202,13 @@ public:
 
 class AttackBehaviour : public IBehaviour
 {
-
+public:
 };
 
 
 class CheckDistanceBehaviour : public IBehaviour //Returns true if (pAgent.pos - pAgent.target.pos).magnitude < distance
 {
+public:
 	CheckDistanceBehaviour(float distance);
 	CheckDistanceBehaviour(float distance, float weight);
 	~CheckDistanceBehaviour();
@@ -227,6 +228,7 @@ class CheckDistanceBehaviour : public IBehaviour //Returns true if (pAgent.pos -
 
 class CheckTimerBehaviour : public IBehaviour
 {
+public:
 	CheckTimerBehaviour(float weight);
 	~CheckTimerBehaviour();
 
@@ -242,6 +244,7 @@ class CheckTimerBehaviour : public IBehaviour
 
 class SetTimerBehaviour : public IBehaviour
 {
+public:
 	SetTimerBehaviour(float time);
 	SetTimerBehaviour(float time, float weight);
 	~SetTimerBehaviour();

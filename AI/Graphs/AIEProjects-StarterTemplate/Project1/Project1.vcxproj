@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\GameObjectPool.cpp" />
     <ClCompile Include="source\CollisionManager.cpp" />
     <ClCompile Include="source\BehaviourPack.cpp" />
     <ClCompile Include="source\Decision.cpp" />
@@ -101,8 +102,10 @@
     <ClCompile Include="source\Node.cpp" />
     <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\TreeNode.cpp" />
+    <ClCompile Include="source\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameObjectPool.h" />
     <ClInclude Include="include\CollisionManager.h" />
     <ClInclude Include="include\Decision.h" />
     <ClInclude Include="include\BinaryTreeClass.h" />
@@ -117,6 +120,7 @@
     <ClInclude Include="include\Vector2.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\TreeNode.h" />
+    <ClInclude Include="include\Zombie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

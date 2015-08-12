@@ -5,13 +5,15 @@
 GameObject::GameObject()
 {
 	m_texture = nullptr;
+	m_spriteBatch = nullptr;
 	m_position = Vector2(0, 0);
 	m_velocity = Vector2(0, 0);
 	m_acceleration = Vector2(0, 0);
+	m_force = Vector2(0, 0);
 	m_scale = Vector2(1, 1);
 	m_friction = 1;
 	m_mass = 1;
-	//m_spriteBatch = nullptr;
+	m_maxVelocity = 0;
 }
 
 
@@ -22,9 +24,11 @@ GameObject::GameObject(Vector2& startingPos, Texture* texture, SpriteBatch* spri
 	m_position = startingPos;
 	m_velocity = Vector2(0, 0);
 	m_acceleration = Vector2(0, 0.0);
+	m_force = Vector2(0, 0);
 	m_scale = Vector2(1, 1);
 	m_friction = 1;
 	m_mass = 1;
+	m_maxVelocity = 0;
 }
 
 

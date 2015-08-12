@@ -32,6 +32,10 @@ public:
 	int pendingChildIndex = 0;
 	BehaviourResult result;
 	virtual BehaviourResult Update(Agent* pAgent, float deltaTime) = 0;
+	void AddChild(IBehaviour* child)
+	{
+		m_childBehaviours.push_back(child);
+	}
 
 };
 

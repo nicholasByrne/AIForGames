@@ -6,6 +6,12 @@
 Agent::Agent()
 {
 	tag = "Agent";
+	m_target = nullptr;
+	//m_decision = nullptr;
+	m_timer = 0;
+
+	m_scale = Vector2(0.25f, 0.25f);
+	m_force = Vector2(0.0f, 0.0f);
 }
 
 
@@ -16,13 +22,13 @@ Agent::Agent(Vector2& startingPos, Texture* texture, SpriteBatch* spriteBatch)
 	m_spriteBatch = spriteBatch;
 	m_position = startingPos;
 	m_maxVelocity = 400.0f;
-	/*m_velocity = Vector2(0, 0);
-	m_acceleration = Vector2(0, 0);
-	m_friction = 1;
-	m_mass = 1;*/
-
+	
 	m_scale = Vector2(0.25f, 0.25f);
 	m_force = Vector2(0.0f, 0.0f);
+
+	m_target = nullptr;
+	//m_decision = nullptr;
+	m_timer = 0;
 }
 
 
